@@ -143,11 +143,13 @@ def remove_cart():
 @login_required
 def place_order():
     customer_cart = Cart.query.filter_by(customer_link=current_user.id)
+
     if customer_cart:
         try:
             total = 0
             for item in customer_cart:
                 total += item.product.current_price * item.quantity
+                print(total,"----")
 
             service = APIService(token=API_TOKEN, publishable_key=API_PUBLISHABLE_KEY, test=True)
             create_order_response = service.collect.mpesa_stk_push(phone_number='YOUR_NUMBER ', email=current_user.email,
